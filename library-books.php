@@ -16,6 +16,7 @@ define( 'LIBRARY_BOOKS_URL', plugins_url('/', __FILE__) );  // Define Plugin URL
 define( 'LIBRARY_BOOKS_PATH', plugin_dir_path(__FILE__) );  // Define Plugin Directory Path
 
 if ( !class_exists( 'Library_Books' ) ) {
+	
 	class Library_Books {
 		
 		public function __construct() {
@@ -119,6 +120,10 @@ if ( !class_exists( 'Library_Books' ) ) {
 			
 		}
 		
+		/*
+		 * eBook Post Type custom fields box
+		 */
+		
 		public function library_ebooks_options( $post ){
 			$post_id = $post->ID;
 	
@@ -171,6 +176,10 @@ if ( !class_exists( 'Library_Books' ) ) {
 			<?php
 		}
 		
+		/*
+		 * eBook Shortcode page
+		 */
+		
 		public function library_bookpage() {
 			?>
 			<div class="wrap">
@@ -192,6 +201,9 @@ if ( !class_exists( 'Library_Books' ) ) {
 			update_post_meta( $post_id, '_rating', $_POST['_rating'] );
 		}
 		
+		/*
+		 * call shortcode page template file.
+		 */
 		public function library_book_search_func( $atts ) {
 						
 			ob_start();
@@ -201,20 +213,24 @@ if ( !class_exists( 'Library_Books' ) ) {
 			return ob_get_clean();
 		}
 		
+		/*
+		 * call Bool lists template file on ajax search.
+		 */
 		public function wp_ajax_library_book_search_func(){			
 			
 			library_book_get_template( 'ebook-lists.php' );
 			
 			wp_die();
 		}
-		
-		
-	
 	}
 }
 
 new Library_Books();
 
+/**
+ * Get other templates passing attributes and including the file.
+ * 
+ */
 function library_book_get_template( $template_name, $args = array(), $template_path = '', $default_path = ''  ) {
 		
 	
@@ -235,6 +251,15 @@ function library_book_get_template( $template_name, $args = array(), $template_p
 	
 }
 
+/**
+ * Locate a template and return the path for inclusion.
+ *
+ * This is the load order:
+ *
+ * yourtheme/$template_path/$template_name
+ * yourtheme/$template_name
+ * $default_path/$template_name
+ */
 function library_book_locate_template( $template_name, $template_path = '', $default_path = '' ) {
 
 	if ( ! $template_path ) {
